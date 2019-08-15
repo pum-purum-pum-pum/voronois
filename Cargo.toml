@@ -1,0 +1,11 @@
+[package]
+name = "voronois"
+version = "0.1.0"
+authors = ["vlad <vladzhukovtirko@gmail.com>"]
+
+[dependencies]
+kiss3d = "0.20.1"
+nalgebra = "0.18.0"
+ncollide2d = "*"
+voronoi = "0.1.4"
+rand = "0.7.0"
