@@ -44,7 +44,7 @@ impl Default for KissMe {
 		let eye = Point3::new(BOX_SIZE as f32 / 2.0, BOX_SIZE as f32 / 2.0, 2.0);
 	    let at = Point3::new(BOX_SIZE as f32 / 2.0, BOX_SIZE as f32 / 2.0, 0.0);
         let mut window = Window::new("Kiss3d: lines");
-		window.set_point_size(2.0);
+		window.set_point_size(5.0);
 	    window.set_light(Light::StickToCamera);
 		KissMe {
 			eye: eye,
