@@ -41,7 +41,8 @@ impl KissMe {
 
 impl Default for KissMe {
     fn default() -> Self {
-        let eye = Point3::new(BOX_SIZE as f32 / 2.0, BOX_SIZE as f32 / 2.0, 2.0);
+        let eye =
+            Point3::new(BOX_SIZE as f32 / 2.0, BOX_SIZE as f32 / 2.0, 2.0);
         let at = Point3::new(BOX_SIZE as f32 / 2.0, BOX_SIZE as f32 / 2.0, 0.0);
         let mut window = Window::new("Kiss3d: lines");
         window.set_point_size(8.0);

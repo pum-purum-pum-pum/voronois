@@ -13,8 +13,10 @@ pub const DISPERSION: f32 = 200.0; // dispersion of sampled voronoi sites
 pub const EPS: f32 = 0.00001;
 pub const PROX_EPS: f32 = 0.001;
 
-
-pub fn generate_convex_polygon(samples_num: usize, size: f32) -> Vec<Point2<f32>> {
+pub fn generate_convex_polygon(
+    samples_num: usize,
+    size: f32,
+) -> Vec<Point2<f32>> {
     let mut rng = rand::thread_rng();
     let mut points = vec![];
     for _ in 0..samples_num {
@@ -70,7 +72,11 @@ pub fn check_on(polygon: &[Point2<f32>], point: Point2<f32>) -> bool {
     flag
 }
 
-pub fn spawn_inside(polygon: &[Point2<f32>], weights: &[f32], dispersion: f32) -> Point2<f32> {
+pub fn spawn_inside(
+    polygon: &[Point2<f32>],
+    weights: &[f32],
+    dispersion: f32,
+) -> Point2<f32> {
     assert!(polygon.len() == weights.len());
     let mut rng = rand::thread_rng();
     let mut res = Point2::new(0.0, 0.0);
@@ -101,7 +107,10 @@ fn check_in_segment(point: Point2<f32>, segment: Segment<f32>) -> bool {
 }
 
 // have not found proper function in ncollide
-fn segment_intersection(s1: &Segment<f32>, s2: &Segment<f32>) -> Option<Point2<f32>> {
+fn segment_intersection(
+    s1: &Segment<f32>,
+    s2: &Segment<f32>,
+) -> Option<Point2<f32>> {
     let dir = s1.b().coords - s1.a().coords;
     let dir2 = s2.b().coords - s2.a().coords;
     // assert!(dir.norm() > EPS && dir2.norm() > EPS);
@@ -115,7 +124,9 @@ fn segment_intersection(s1: &Segment<f32>, s2: &Segment<f32>) -> Option<Point2<f
     if let (Some(toi1), Some(_toi2)) = (toi1, toi2) {
         // assert!(((s1.a() + toi1 * dir).coords - (s1.b() - toi2 * dir).coords).norm() < PROX_EPS);
         let res = s1.a() + toi1 * dir;
-        if check_in_segment(res, s1.clone()) && check_in_segment(res, s2.clone()) {
+        if check_in_segment(res, s1.clone())
+            && check_in_segment(res, s2.clone())
+        {
             Some(res)
         } else {
             None
@@ -137,7 +148,9 @@ fn clip_poly(
         for (_id, poly_segment) in polygon_segments.iter().enumerate() {
             let vor_segment = Segment::new(vor_segment.0, vor_segment.1);
             let poly_segment = Segment::new(poly_segment.0, poly_segment.1);
-            if let Some(intersection) = segment_intersection(&vor_segment, &poly_segment) {
+            if let Some(intersection) =
+                segment_intersection(&vor_segment, &poly_segment)
+            {
                 if !check_on(polygon, intersection) {
                     dbg!(intersection);
                     dbg!(vor_segment);
@@ -178,7 +191,7 @@ fn clip_poly(
 
         return (clipped_points, intersections);
     }
-    // hack 
+    // hack
     // let clipped_points = voronoi_poly;
     // let ids = convex_hull_idx(&clipped_points);
     // // TODO opt: inplace
@@ -189,7 +202,6 @@ fn clip_poly(
     //     }
     //     res
     // };
-
 
     (voronoi_poly.clone(), vec![])
 }
@@ -205,7 +217,9 @@ fn brute_clipping(
         let (clipped, clip_points) = clip_poly(polygon, vor_poly);
         {
             // TODO: not sure but looks like internal bug in voronoi crate so we need to remove extra cells :O
-            if clipped.len() == 0 || !clipped.iter().all(|p| check_in(&polygon, *p)) {
+            if clipped.len() == 0
+                || !clipped.iter().all(|p| check_in(&polygon, *p))
+            {
                 continue;
             }
         }
@@ -229,7 +243,8 @@ pub fn destruction(
     {
         // apply sofmax
         let temperatire = TEMPERATURE; // actually 1/sigma
-        let exp_sum: f32 = weights.iter().map(|x| (-temperatire * x).exp()).sum();
+        let exp_sum: f32 =
+            weights.iter().map(|x| (-temperatire * x).exp()).sum();
         for x in weights.iter_mut() {
             *x = (-temperatire * *x).exp() / exp_sum
         }
